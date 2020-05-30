@@ -2,7 +2,8 @@ const LIVR = require('livr');
 LIVR.Validator.defaultAutoTrim(true);
 
 const validateCreate = new LIVR.Validator({
-    name : ['required']
+    name : ['required'],
+    categoryId: ['required']
 });
 
 const validateUpdate = new LIVR.Validator({
