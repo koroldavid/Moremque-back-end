@@ -1,6 +1,6 @@
 const rules    = require('../../rules/category');
 
-module.exports = function list(db, req, res) {
+module.exports = function post(db, req, res) {
     const validData = rules.create.validate(req.body);
 
     if (validData) {
@@ -11,7 +11,8 @@ module.exports = function list(db, req, res) {
         updatedAt: Date.now(),
         subCategoryIds: [],
         clicks: 0,
-        isActive: false
+        isActive: false,
+        paranoid: false
       };
 
       db.collection('category').insertOne(category, (error, result) => {

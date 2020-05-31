@@ -1,15 +1,17 @@
 const ObjectID = require('mongodb').ObjectID;
 const rules    = require('../../rules/category');
 
-module.exports = function list(db, req, res) {
+module.exports = function put(db, req, res) {
     const validData = rules.update.validate(req.body);
 
     if (validData) {
       const id = req.params.id;
       const details = { '_id': new ObjectID(id) };
 
+      const { name, isActive } = req.body;
       const updateBody = {
-        name: req.body.name
+        name,
+        isActive
       };
 
       db.collection('category').findOne(details, (error, oldCategory) => {

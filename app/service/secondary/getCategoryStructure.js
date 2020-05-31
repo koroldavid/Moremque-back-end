@@ -1,28 +1,29 @@
-module.exports = function list(db, req, res) {
+module.exports = function getCategoryStructure(db, req, res) {
     db.collection('category').find().toArray((error, categories) => {
         if (error) res.send(JSON.stringify({status: 500, massage: error}));
 
         db.collection('subCategory').find().toArray((error, subCategories) => {
             if (error) res.send(JSON.stringify({status: 500, massage: error}));
 
-            console.log(subCategories, categories)
+            
 
-            const structure = categories.map(category => {
+            const structure = categories.filter(category => !category.paranoid).map(category => {
                 const { name, _id, subCategoryIds } = category;
-                const subStructure = false ? [] : subCategoryIds.map(id => {
+                const subStructure = subCategoryIds.map(id => {
                     const subCategory = subCategories.find(subCategory => subCategory._id + '' === id + '');
-                    const { name, _id } = subCategory;
+                    const { name, _id, paranoid } = subCategory;
 
                     return {
                         name,
-                        _id
+                        _id,
+                        paranoid
                     }
-                });
+                }).filter(subStuct => !subStuct.paranoid);
 
                 return {
                     subStructure,
                     name,
-                    id: _id
+                    _id
                 };
             });
 

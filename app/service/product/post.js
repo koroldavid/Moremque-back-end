@@ -1,34 +1,33 @@
-const rules = require('../../rules/subCategory');
+const rules = require('../../rules/product');
 const ObjectID = require('mongodb').ObjectID;
 
 module.exports = function post(db, req, res) {
     const validData = rules.create.validate(req.body);
 
     if (validData) {
-      const { name, categoryId } = req.body;
+      const { name, subCategoryId } = req.body;
 
-      const subCategory = {
+      const product = {
         name,
-        categoryId,
+        subCategoryId,
         createdAt: Date.now(),
         updatedAt: Date.now(),
-        productIds: [],
         clicks: 0,
         isActive: false,
         paranoid: false
       };
 
-      const categoryDetail = { '_id': new ObjectID(categoryId) };
+      const subCategoryDetail = { '_id': new ObjectID(subCategoryId) };
 
-      db.collection('subCategory').insertOne(subCategory, (error, result) => {
+      db.collection('product').insertOne(product, (error, result) => {
         if (error) res.send(JSON.stringify({status: 500, massage: error}));
 
-        db.collection('category').findOne(categoryDetail, (error, category) => {
+        db.collection('subCategory').findOne(subCategoryDetail, (error, subCategory) => {
           if (error) res.send(JSON.stringify({status: 500, massage: error}));
 
-          const subCategoryIds = [...category.subCategoryIds, result.ops[0]._id];
+          const productIds = [...subCategory.productIds, result.ops[0]._id];
 
-          db.collection('category').update(categoryDetail, {...category, subCategoryIds}, (error, categoryResult) => {
+          db.collection('subCategory').update(subCategoryDetail, {...subCategory, productIds}, (error, subCategoryResult) => {
             if (error) res.send(JSON.stringify({status: 500, massage: error}));
 
             res.send(result.ops[0]);

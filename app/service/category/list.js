@@ -6,9 +6,11 @@ module.exports = function list(db, req, res) {
         const from = offset;
         const to = (+offset) + (+limit);
 
+        const nonParanoid = categories.filter(category => !category.paranoid);
+
         const responce = {
-          data  : categories.slice(from, to),
-          total : categories.length
+          data  : nonParanoid.slice(from, to),
+          total : nonParanoid.length
         }
 
         res.send(responce);
