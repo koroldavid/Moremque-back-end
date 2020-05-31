@@ -2,16 +2,22 @@ module.exports = function list(db, req, res) {
     db.collection('subCategory').find().toArray((error, subCategories) => {
         if (error) res.send(JSON.stringify({status: 500, massage: error}));
 
-        const { limit, offset, id} = req.query;
+        let data = subCategories;
+
+        const { limit, offset, id, paranoid} = req.query;
         const from = offset;
         const to = (+offset) + (+limit);
 
-        const filtredResult = subCategories.filter(subCategory => subCategory.categoryId === id);
-        const nonParanoid = filtredResult.filter(category => !category.paranoid);
+        data = data.filter(el => el.categoryId === id);
+        if (paranoid !== undefined) {
+          data = data.filter(el => el.paranoid + '' === paranoid);
+        } else {
+          data = data.filter(el => el.paranoid);
+        }
 
         const responce = {
-            data  : nonParanoid.slice(from, to),
-            total : nonParanoid.length
+            data  : data.slice(from, to),
+            total : data.length
           }
 
         res.send(responce);
