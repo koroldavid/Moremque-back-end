@@ -8,8 +8,6 @@ module.exports = function list(db, req, res) {
         const from = offset;
         const to = (+offset) + (+limit);
 
-        console.log(paranoid);
-
         if (paranoid !== undefined) {
           data = data.filter(el => el.paranoid + '' === paranoid);
         } else {

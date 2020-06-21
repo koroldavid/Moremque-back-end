@@ -8,10 +8,11 @@ module.exports = function put(db, req, res) {
       const id = req.params.id;
       const details = { '_id': new ObjectID(id) };
 
-      const { name, isActive } = req.body;
+      const { name, isActive, paranoid } = req.body;
       const updateBody = {
         name,
-        isActive
+        isActive,
+        paranoid
       };
 
       db.collection('subCategory').findOne(details, (error, oldSubCategory) => {

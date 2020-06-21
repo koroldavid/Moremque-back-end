@@ -7,7 +7,8 @@ const validateCreate = new LIVR.Validator({
 
 const validateUpdate = new LIVR.Validator({
     name     : ['required'],
-    isActive : ['required']
+    isActive : ['required'],
+    paranoid : ['required']
 });
 
 module.exports = {
